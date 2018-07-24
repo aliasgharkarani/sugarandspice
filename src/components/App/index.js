@@ -22,16 +22,26 @@ class App extends Component {
     console.log(this.props)
     console.warn(this.props)
     this.state = {
-      email: ""
+      email: "",
+      password:"",
     }
   }
   static navigationOptions = {
     title: "App"
   };
-
+   signup = () =>{
+    firebase.auth().createUserWithEmailAndPassword(this.state.email,this.state.password)
+    .then((studentcreatedUser) => {
+        // delete user.password;
+        // delete user.confirmPassword;
+        user.uid = studentcreatedUser.uid;
+        firebase.database().ref(`users/students/${user.uid}`).set(user)
+    })
+   }         
   render() {
     // const { navigate } = this.props.navigation;
 
+   
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -41,9 +51,18 @@ class App extends Component {
               style={{ height: width / 10, width: "90%", borderColor: "white", fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
-              placeholder="Email Address or Mobile Number"
+              placeholder="Email"
               placeholderTextColor="black"
             />
+            <TextInput
+              underlineColorAndroid="white"
+              style={{ height: width / 10, width: "90%", borderColor: "white", fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
+              onChangeText={(password) => this.setState({ password })}
+              value={this.state.password}
+              placeholder="Password"
+              placeholderTextColor="black"
+            />
+            <Button onPress={() => this.signup()}><Text>Click</Text></Button>
           </View>
         </ScrollView>
       </View>
