@@ -23,32 +23,35 @@ class App extends Component {
     console.warn(this.props)
     this.state = {
       email: "",
-      password:"",
+      password: "",
     }
+    this.signup = this.signup.bind(this);
   }
+
   static navigationOptions = {
     title: "App"
   };
-   signup = () =>{
-    firebase.auth().createUserWithEmailAndPassword(this.state.email,this.state.password)
-    .then((studentcreatedUser) => {
+  signup = () => {
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((studentcreatedUser) => {
         // delete user.password;
         // delete user.confirmPassword;
         user.uid = studentcreatedUser.uid;
         firebase.database().ref(`users/students/${user.uid}`).set(user)
-    })
-   }         
+      })
+    alert();
+  }
   render() {
     // const { navigate } = this.props.navigation;
 
-   
+
     return (
       <View style={styles.container}>
         <ScrollView>
           <View>
             <TextInput
               underlineColorAndroid="white"
-              style={{ height: width / 10, width: "90%", borderColor: "white", fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
+              style={{ height: width / 10, width: "70%", backgroundColor: "#ffffff", borderTopLeftRadius: 12, borderTopRightRadius: 12, fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
               placeholder="Email"
@@ -56,13 +59,13 @@ class App extends Component {
             />
             <TextInput
               underlineColorAndroid="white"
-              style={{ height: width / 10, width: "90%", borderColor: "white", fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
+              style={{ height: width / 10, width: "70%", borderBottomLeftRadius: 12, borderBottomRightRadius: 12, backgroundColor: "#ffffff", borderColor: "red", borderTopWidth: 0.5, fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
               placeholder="Password"
               placeholderTextColor="black"
             />
-            <Button onPress={() => this.signup()}><Text>Click</Text></Button>
+            <Button onPress={() => this.signup}><Text>Click</Text></Button>
           </View>
         </ScrollView>
       </View>
