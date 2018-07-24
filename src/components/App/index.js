@@ -7,7 +7,8 @@ import {
   View,
   TouchableNativeFeedback,
   Dimensions,
-  ScrollView
+  ScrollView,
+  TextInput,
 } from 'react-native';
 // import { CheckBox } from 'react-native-elements';
 import { Button, CheckBox, ListItem } from "native-base";
