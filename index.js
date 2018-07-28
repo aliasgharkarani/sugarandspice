@@ -1,9 +1,9 @@
 import { AppRegistry } from 'react-native';
 import App from './App';
 // import Apps from './src/index'
-import Apps from './src/index'
+// import Apps from './src/index'
 import * as firebase from 'firebase';
-
+import Signup from './src/index'
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyDswKggKCbNBHJAS3L0IG0yhBlL2ARUKGo",
@@ -16,4 +16,4 @@ var config = {
   firebase.initializeApp(config);
 
 console.disableYellowBox=true;
-AppRegistry.registerComponent('sugarandspice', () => Apps);
+AppRegistry.registerComponent('sugarandspice', () => Signup);

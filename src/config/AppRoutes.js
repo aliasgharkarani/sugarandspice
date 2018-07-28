@@ -4,9 +4,8 @@ import React from 'react'
 //   App,
 //   Signup
 // } from './../components/index';
-import {
-  App,
-} from './../container/index';
+import {App} from './../container/index';
+import {SignUp} from './../container/index';
 import { StackNavigator, DrawerNavigator, NavigationActions } from "react-navigation";
 // import history from '../components/History'
 
@@ -20,6 +19,12 @@ const Drawer = DrawerNavigator({
 const NavigationApp = StackNavigator({
   App: {
     screen: App,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  SignUp: {
+    screen: SignUp,
     navigationOptions: {
       header: null,
     }
