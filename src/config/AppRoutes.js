@@ -10,14 +10,14 @@ import { StackNavigator, DrawerNavigator, NavigationActions } from "react-naviga
 // import history from '../components/History'
 
 const NavigationApp = StackNavigator({
-  Signin: {
-    screen:Signin,
+  Signup: {
+    screen: Signup,
     navigationOptions: {
       header: null,
     }
   },
-  Signup: {
-    screen: Signup,
+  Signin: {
+    screen: Signin,
     navigationOptions: {
       header: null,
     }
