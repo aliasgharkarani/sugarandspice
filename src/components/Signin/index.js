@@ -48,7 +48,7 @@ class Signin extends Component {
         // firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).set(user)
         // alert("nbhfbh")
         // alert(this.state.password)
-        // this.props.navigation.navigate("Signup")
+        this.props.navigation.navigate("Main")
       }).catch(
         (Error) => { alert(Error.message) }
       )
