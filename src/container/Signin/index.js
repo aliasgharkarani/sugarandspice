@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { browserHistory } from 'react-router';
 import { AuthActions } from "../../store/actions/index";
-import { App } from './../../components/index';
+import { Signin } from './../../components/index';
 
-class Apps extends Component {
+class Signinn extends Component {
 
     constructor(props) {
         super(props);
@@ -26,7 +26,7 @@ class Apps extends Component {
     render() {
         const { navigate } = this.props.navigation;
         return (
-            <App navigation={this.props.navigation}/>
+            <Signin navigation={this.props.navigation}/>
             // <Signin submit={this.loginSubmit} />
         );
     }
@@ -41,4 +41,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Apps);
+export default connect(mapStateToProps, mapDispatchToProps)(Signinn);

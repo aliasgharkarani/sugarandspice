@@ -1,6 +1,6 @@
-import App from './App/index';
-import SignUps from './Signup/index'
+import Signin from './Signin/index';
+import Signup from './Signup/index';
 export {
-    App,
+    Signin,
     Signup
 }

@@ -16,7 +16,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import * as firebase from 'firebase';
 const { height, width, fontScale } = Dimensions.get('window');
 
-class SignUps extends Component {
+class Signup extends Component {
   constructor(props) {
     super(props);
     console.log(this.props)
@@ -53,7 +53,6 @@ class SignUps extends Component {
   }
   render() {
     // const { navigate } = this.props.navigation;
-
 
     return (
       <View style={styles.container}>
@@ -93,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUps;
+export default Signup;

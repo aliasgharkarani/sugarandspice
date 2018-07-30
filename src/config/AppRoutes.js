@@ -4,31 +4,24 @@ import React from 'react'
 //   App,
 //   Signup
 // } from './../components/index';
-import {App} from './../container/index';
-import {SignUp} from './../container/index';
+import Signin from './../container/Signin/index';
+import Signup from './../container/Signup/index';
 import { StackNavigator, DrawerNavigator, NavigationActions } from "react-navigation";
 // import history from '../components/History'
 
-
-const Drawer = DrawerNavigator({
-  Home: {
-    screen: App
-  }
-}, { drawerWidth: 200 })
-
 const NavigationApp = StackNavigator({
-  App: {
-    screen: App,
+  Signin: {
+    screen:Signin,
     navigationOptions: {
       header: null,
     }
   },
-  SignUp: {
-    screen: SignUp,
+  Signup: {
+    screen: Signup,
     navigationOptions: {
       header: null,
     }
-  }
+  },
 }
 )
 

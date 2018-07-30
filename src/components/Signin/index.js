@@ -16,7 +16,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import * as firebase from 'firebase';
 const { height, width, fontScale } = Dimensions.get('window');
 
-class App extends Component {
+class Signin extends Component {
   constructor(props) {
     super(props);
     console.log(this.props)
@@ -34,8 +34,8 @@ class App extends Component {
   // console.log();
   signup = () => {
     let user = {
-      email : this.state.email,
-      password : this.state.password
+      email: this.state.email,
+      password: this.state.password
     }
     firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
       .then((studentcreatedUser) => {
@@ -46,10 +46,10 @@ class App extends Component {
         // alert("nbhfbh")
         // alert(this.state.password)
       }).catch(
-        (Error)=>{ alert(Error.message)}
+      (Error) => { alert(Error.message) }
       )
-      // alert("cbvbvb");
-      // alert();
+    // alert("cbvbvb");
+    // alert();
   }
   render() {
     // const { navigate } = this.props.navigation;
@@ -58,27 +58,28 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View style={{height:width/1.2}}>
-            </View>
-          <View style={{alignItems:"center",height:width/2,flex:1,justifyContent:"flex-end"}}>
+          <View style={{ height: width / 1.3}}>
+          </View>
+          <View style={{ alignSelf: "center", borderRadius:16, height: width / 1.2, width: width / 1.1, backgroundColor: "red" }}>
             <TextInput
               underlineColorAndroid="white"
-              style={{ height: width /8, width: "70%", backgroundColor: "#ffffff", borderTopLeftRadius: 12, borderTopRightRadius: 12, fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
+              style={{ fontWeight: "bold", fontWeight: "bold", height: width /4, width, color: "#ffffff", backgroundColor: "none", fontSize: fontScale * 25, paddingRight: "2%", paddingLeft: "2%" }}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
               placeholder="Email"
-              placeholderTextColor="black"
+              placeholderTextColor="#ffffff"
             />
             <TextInput
               underlineColorAndroid="white"
-              style={{ height: width /8, width: "70%", borderBottomLeftRadius: 12, borderBottomRightRadius: 12, backgroundColor: "#ffffff", borderColor: "red", borderTopWidth:1, fontSize: fontScale * 13, paddingRight: "2%", paddingLeft: "2%" }}
+              style={{ color: "#ffffff", fontWeight: "bold", height: width /4, width, backgroundColor: "none", fontSize: fontScale * 25, paddingRight: "2%", paddingLeft: "2%" }}
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
               placeholder="Password"
-              placeholderTextColor="black"
+              placeholderTextColor="#ffffff"
               secureTextEntry={true}
             />
-            <Button style={{alignSelf:"center",alignContent:"center",width:width/5,backgroundColor:"purple",paddingLeft:"5%"}} onPress={() => this.signup( )}><Text style={{color:"white",fontSize:fontScale*20,fontWeight:"bold"}}>Click</Text></Button>
+            <Button style={{ height: width / 8, width: width /1.7, backgroundColor: "purple", borderRadius: 24, alignSelf: "center", paddingLeft: "23%", marginTop: "5%" }} onPress={() => this.signup()}><Text style={{ color: "white", fontSize: fontScale * 25, fontWeight: "bold", justifyContent: "center" }}>SIGN IN</Text></Button>
+            <View style={{ flexDirection: "row", alignSelf: "center", marginTop: "5%" }}><Text style={{ color: "#ffffff", fontSize: fontScale * 22, fontWeight: "bold" }}>Dont Have an Account? </Text><Text style={{ textDecorationLine: 'underline', color: "#ffffff", fontSize: fontScale * 22 }}>Sign Up</Text></View>
           </View>
         </ScrollView>
       </View>
@@ -89,8 +90,8 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"rgb(180,180,180)",
+    backgroundColor: "blue",
   },
 });
 
-export default App;
+export default Signin;

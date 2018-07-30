@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { browserHistory } from 'react-router';
 import { AuthActions } from "../../store/actions/index";
-import { SignUps } from './../../components/index';
+import { Signup } from './../../components/index';
 
 class SignUp extends Component {
 
@@ -26,7 +26,7 @@ class SignUp extends Component {
     render() {
         const { navigate } = this.props.navigation;
         return (
-            <SignUps navigation={this.props.navigation}/>
+            <Signup navigation={this.props.navigation}/>
             // <Signin submit={this.loginSubmit} />
         );
     }
