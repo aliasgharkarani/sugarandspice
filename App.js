@@ -13,6 +13,7 @@ import {
   Dimensions
 } from 'react-native';
 import { StackNavigator } from 'react-navigation'
+import { Root } from 'native-base';
 const {height,width,fontScale} =Dimensions.get("window")
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -28,9 +29,11 @@ class HomeScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View>
-        <Text onPress={() => navigate('Profile')}>navigate to profile</Text>
-      </View>
+      <Root>
+        <View>
+          <Text onPress={() => navigate('Profile')}>navigate to profile</Text>
+        </View>
+      </Root>
     )
   }
 }
