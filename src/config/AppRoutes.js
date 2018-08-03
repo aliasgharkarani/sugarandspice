@@ -7,6 +7,8 @@ import React from 'react'
 import Signin from './../container/Signin/index';
 import Signup from './../container/Signup/index';
 import Main from './../container/Main/index'
+import Orders from './../container/Orders/index'
+import Addproducts from './../container/Addproducts/index'
 import { StackNavigator, DrawerNavigator, NavigationActions } from "react-navigation";
 // import history from '../components/History'
 
@@ -25,6 +27,18 @@ const NavigationApp = StackNavigator({
   },
   Main: {
     screen: Main,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  Orders: {
+    screen: Orders,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  Addproducts: {
+    screen: Addproducts,
     navigationOptions: {
       header: null,
     }

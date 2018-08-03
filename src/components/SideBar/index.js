@@ -51,7 +51,7 @@ class SideBar extends React.Component {
         firebase.database().ref("user/" + firebase.auth().currentUser.uid).once("value")
         .then(success => {
             console.log(success.val())
-            success.val().imagelink ? this.setState({ username: success.val().name , avatarSource:success.val().imagelink }): this.setState({ username: success.val().name})
+            success.val().imagelink ? this.setState({ username: success.val().name , avatarSource:success.val().imagelink ,accountType:success.val().accountType }): this.setState({ username: success.val().name,accountType:success.val().accountType})
             //   if(success.val().imagelink=null){
                 // this.setState({ avatarSource:"content://media/external/images/media/2958", })                
             //   }
@@ -143,11 +143,13 @@ class SideBar extends React.Component {
     //     alert("mount");
     // }
     render() {
-
+        closeDrawer = () => {
+            this.drawer._root.close()
+          };
         return (
             <View style={styles.container}>
                 <View style={{ width, height: width / 4, backgroundColor: "#9f80d3", flexDirection: "row" }}>
-                    <TouchableOpacity onPress={() => this.start()} style={{ width:width/5, height:width/5, alignSelf: "center", marginLeft: "5%", borderRadius: 100, overflow:"hidden",backgroundColor:"rgb(180,180,180)" }}>
+                    <TouchableOpacity activeOpacity={1} onPress={() => this.start()} style={{ width:width/5, height:width/5, alignSelf: "center", marginLeft: "5%", borderRadius: 100, overflow:"hidden",backgroundColor:"rgb(180,180,180)" }}>
                         <Image
                         onPress={() => this.start()}
                             /* resizeMode="contain"  */
@@ -159,16 +161,23 @@ class SideBar extends React.Component {
                     <Text style={{ color:"blue", alignSelf: "center", fontSize: fontScale * 25, marginLeft: "5%" }}>{this.state.username}</Text>
                 </View>
 
-                <View style={{ width, height: width / 4, backgroundColor: "rgb(180,180,180)", flexDirection: "row" }}>
+                <TouchableOpacity activeOpacity={1} style={{ width, height: width / 4,borderBottomColor:"blue",borderBottomWidth:1, backgroundColor: "rgb(180,180,180)", flexDirection: "row" }} onPress={()=>{ this.props.navigation.navigate("Main")}} >
                     <View style={{ alignSelf: "center", marginLeft: "5%" }}>
                         <Icon name="ios-home" />
                     </View>
-                    <Text style={{ color: "red", alignSelf: "center", fontSize: fontScale * 25, marginLeft: "5%" }}>Home</Text>
-                </View>
-                <View style={{backgroundColor:"purple",flex:1}}>
-                        {/* <Image source={{uri:this.state.avatarSource}} style={styles.uploadAvatar} /> */}
-                </View>
-                <Text style={{backgroundColor:"green",color:"white",textAlign:"center",fontSize:fontScale*14,flex:1}} onPress={() => firebase.auth().signOut().then(s => {
+                    <Text  style={{ color: "red", alignSelf: "center", fontSize: fontScale * 25, marginLeft: "5%" }}>Home</Text>
+                </TouchableOpacity>
+        {/* firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).update({imagelink}) */}
+                  
+                  {/* { firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).once} */}
+                <TouchableOpacity activeOpacity={1} style={{ width, height: width / 4 ,backgroundColor: "rgb(180,180,180)", flexDirection: "row" }}  onPress={()=>{ this.state.accountType=="user"? this.props.navigation.navigate("Orders"):this.props.navigation.navigate("Addproducts")}} >
+                    <View style={{ alignSelf: "center", marginLeft: "5%" }}>
+                        <Icon name="ios-basket" />
+                    </View>
+                    <Text  style={{ color: "red", alignSelf: "center", fontSize: fontScale * 25, marginLeft: "5%" }}>{this.state.accountType=="user"?"Orders":"Add Products"}</Text>
+                </TouchableOpacity>
+
+                <Text style={{backgroundColor:"green",color:"white",textAlign:"center",fontSize:fontScale*30,fontWeight:"bold",flex:1}} onPress={() => firebase.auth().signOut().then(s => {
                     this.props.navigation.navigate("Signup")
                 })}>Logout</Text>
             </View>
