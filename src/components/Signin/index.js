@@ -40,9 +40,10 @@ class Signin extends Component {
       password: this.state.password
     }
     firebase.auth().signInWithEmailAndPassword(user.email, user.password)
-      .then((studentcreatedUser) => {
-        // delete user.password;
-        // delete user.confirmPassword;
+    .then((studentcreatedUser) => {
+      // delete user.password;
+      // delete user.confirmPassword;
+      // alert("aaaa")
         // user.uid = studentcreatedUser.uid;
         //Database Work
         // firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).set(user)
@@ -52,7 +53,7 @@ class Signin extends Component {
       }).catch(
         (Error) => { alert(Error.message) }
       )
-    // alert("cbvbvb");
+    // alert(firebase.toString());
     // alert();
   }
   render() {

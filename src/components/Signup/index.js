@@ -27,6 +27,14 @@ class Signup extends Component {
       email: "",
       password: "",
     }
+
+    if(firebase.auth().currentUser){
+      console.log(firebase.auth().currentUser)
+      this.props.navigation.navigate("Main")
+    }
+    else{
+      console.log("firebase.auth().currentUser",firebase.auth().currentUser)
+    }
     // this.signup = this.signup.bind(this);
   }
 

@@ -68,7 +68,7 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
-   height
+   height,
   },
   welcome: {
     fontSize: 20,

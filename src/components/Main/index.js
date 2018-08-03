@@ -18,6 +18,7 @@ import {
 import { Container, Header, Content, Footer, Drawer, FooterTab, Button, Icon, List, ListItem, } from 'native-base';
 import { Card } from 'react-native-elements';
 import SideBar from '../SideBar/index';
+import * as firebase from 'firebase';
 const { height, width, fontScale, } = Dimensions.get('window');
 
 const fake = [
@@ -127,15 +128,17 @@ class Main extends Component {
 
     return (
       <Drawer
+        navigation={this.props.navigation}
         ref={(ref) => { this.drawer = ref; }}
-        content={<SideBar navigator={this.navigator} />}
+        content={<SideBar navigator={this.navigator} navigation={this.props.navigation} />}
         onClose={() => this.closeDrawer()} >
 
             {Platform.OS === 'ios' ? <View style={{ height: "2.5%", backgroundColor: "#9f80d3" }}> </View> : null}
           <View style={{ flexDirection: "row", backgroundColor: "#9f80d3", alignItems: "center", height: width / 6, width }}>
           <TouchableOpacity onPress={this.openDrawer} style={{ width: "20%" }} activeOpacity={1}>
             <View style={{ margin: 1, alignItems: "center" }}>
-              <Image style={{ width: width / 10, height: width / 10, color: "gainsboro" }} source={require('../../assets/logo.png')} />
+              {/* <Image style={{ width: width / 10, height: width / 10, color: "gainsboro" }} source={require('../../assets/logo.png')} /> */}
+           <Icon name="menu" style={{color:"#ffffff"}}/>
             </View>
           </TouchableOpacity>
 
