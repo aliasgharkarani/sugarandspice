@@ -17,37 +17,47 @@ const { height, width, fontScale } = Dimensions.get('window');
 class Orders extends Component {
     constructor(props) {
         super(props);
-firebase.database().ref('Products').once("value").then(success=>{
-alert(success.val());
-})
-.catch(err=>{
-    alert(err)
-}
-)
-
-    
+        this.state = {
+            products: []
+        }
+    }
+    componentWillMount() {
+        firebase.database().ref('Products').once("value").then(success => {
+            const product = success.val();
+            const keys = Object.keys(product);
+            const array = [];
+            for (e of keys) {
+                array.push(product[e])
+            }
+            this.setState({ products: array });
+        })
+            .catch(err => {
+                alert(err)
+            }
+            )
     }
     render() {
-
         return (
             <Container>
                 <Headers navigation={this.props.navigation} />
                 <Content>
                     <List>
-                        <ListItem thumbnail>
-                            <Left>
-                                <Thumbnail square source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/sugarandspice-34c66.appspot.com/o/defaultuser.png?alt=media&token=666d2446-cc82-4023-870c-994a2a8fcc6d' }} />
-                            </Left>
-                            <Body>
-                                <Text>Sankhadeep</Text>
-                                <Text note numberOfLines={1}>Its time to build a difference . .</Text>
-                            </Body>
-                            <Right>
-                                <Button transparent>
-                                    <Text>View</Text>
-                                </Button>
-                            </Right>
-                        </ListItem>
+                        {this.state.products && this.state.products.map((item, index) => {
+                           return <ListItem key={index} >
+                                <Left>
+                                    <Thumbnail square source={{ uri: item.imagelink }} />
+                                </Left>
+                                <Body>
+                                    <Text>{item.productname}</Text>
+                                    <Text note numberOfLines={1}>{item.text}</Text>
+                                </Body>
+                                <Right>
+                                    <Button transparent>
+                                        <Text>{item.price}</Text>
+                                    </Button>
+                                </Right>
+                            </ListItem>
+                        })}
                     </List>
                 </Content>
             </Container>
