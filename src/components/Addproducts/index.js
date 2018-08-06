@@ -6,180 +6,226 @@ import {
     Image,
     View,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    TextInput,
+    ScrollView
 } from 'react-native';
 import Icons from "react-native-vector-icons/FontAwesome"
-import { Content, Container, Thumbnail, CardItem, Left, Body, Right, Footer, FooterTab, Button,Icon } from "native-base"
+import * as firebase from 'firebase';
+import ImagePicker   from "react-native-image-picker"
+import RNFetchBlob from 'react-native-fetch-blob'
+import { Content, Container, Thumbnail, CardItem, Left, Body, Right, Footer, FooterTab, Button, Icon, Textarea,Toast } from "native-base"
 
 const { height, width, fontScale } = Dimensions.get('window');
 
+var options = {
+    title: 'Select Image',
+    // customButtons: [
+    //     { name: 'fb', title: 'Choose Photo from Facebook' },
+    // ],
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
+
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
+
+
+
+
 class Addproducts extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            avatarSource: "https://firebasestorage.googleapis.com/v0/b/sugarandspice-34c66.appspot.com/o/posts%2Fbiryani.jpg?alt=media&token=1683cab5-2fbf-4d06-b155-4ff570ab7b77",
+            productname: "",
+            text: "",
+            price: "",
+            kg: "",
+        }
+
+        // firebase.database().ref("Products/" + firebase.auth().currentUser.uid).once("value")
+        // .then(success => {
+        //     console.log(success.val())
+        //     success.val().imagelink ? this.setState({ productname: success.val().productname , avatarSource:success.val().imagelink ,accountType:success.val().accountType }): this.setState({ username: success.val().name,accountType:success.val().accountType})
+        //     //   if(success.val().imagelink=null){
+        //         // this.setState({ avatarSource:"content://media/external/images/media/2958", })                
+        //         //   } 
+        //         //   else{
+        //             //     this.setState({ avatarSource: success.val().imagelink })                
+        //             //   }
+        //         }).catch(err => {
+        //             console.log(err)
+        //         })
+    }
+
+
+    uploadImage = (uri, imageName, mime = 'image/jpg') => {
+        console.log("1");
+        return new Promise((resolve, reject) => {
+            console.log("2");
+            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+            let uploadBlob = null
+            const imageRef = firebase.storage().ref('Products').child(imageName)
+            fs.readFile(uploadUri, 'base64')
+                .then((data) => {
+                    console.log("then 1")
+                    return Blob.build(data, { type: `${mime};BASE64` })
+                })
+                .then((blob) => {
+                    console.log("then 2")
+                    uploadBlob = blob
+                    return imageRef.put(blob, { contentType: mime })
+                })
+                .then(() => {
+                    console.log("then 3")
+                    uploadBlob.close()
+                    return imageRef.getDownloadURL()
+                })
+                .then((url) => {
+                    console.log("then 4")
+                    // this.uploadonFirebase(url);
+                    this.setState(
+                        {
+                            avatarSource:url
+                        }
+                    )
+                    resolve(url)
+                })
+                .catch((error) => {
+                    console.log("cath")
+                    reject(error)
+                })
+        })
+    }
+
+    uploadonFirebase = (imagelink, productname, price, kg, text) => {
+        // this.uploadImage(imagelink, firebase.auth().currentUser.uid);
+        firebase.database().ref(`Products`).push({ imagelink, productname, price, kg, text }).then(() => {
+            // alert(this)
+            this.setState(
+                {
+                    avatarSource:"https://firebasestorage.googleapis.com/v0/b/sugarandspice-34c66.appspot.com/o/posts%2Fbiryani.jpg?alt=media&token=1683cab5-2fbf-4d06-b155-4ff570ab7b77",
+                    productname: "",
+                    text: "",
+                    price: "",
+                    kg: "",
+                }
+            )
+            Toast.show({
+                text: 'Uploaded!',
+                buttonText: 'Okay',
+                duration: 3000
+            })
+            // alert("jhjdhjh");
+        })
+            .catch((Error) => {
+                console.log("cath")
+                Toast.show({
+                    text: 'Sorry!',
+                    buttonText: 'Check'
+                })
+            })
+    }
+    start = () => {
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                let source = { uri: response.uri };
+
+                // You can also display the image using data:
+                // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                this.setState({
+                    // avatarSource: response.uri
+                });
+            }
+            console.log(this.state.avatarSource)
+            // this.uploadonFirebase(this.state.avatarSource, this.state.productname)
+            this.uploadImage(response.uri, firebase.auth().currentUser.uid);
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                {Platform.OS === 'ios' ? <View style={{ height: "2.5%", backgroundColor: "#9f80d3" }}> </View> : null}
+                <ScrollView>
+                    {Platform.OS === 'ios' ? <View style={{ height: "2.5%", backgroundColor: "#9f80d3" }}> </View> : null}
 
-                <View style={{
-                    flexDirection: 'row',
-                    width,
-                    justifyContent: "space-around"
+                    <View style={{
+                        flexDirection: 'row',
+                        width,
+                        justifyContent: "space-around"
 
-                }}>
-                    {/* <View style={{ flex: 1, height: 70, backgroundColor: "#9f80d3", alignItems: "flex-start", justifyContent: "center", }} ><Button onPress={() => { this.props.navigation.navigate("PaymentsWallet"), console.warn("navigation working") }} style={{ backgroundColor: "#9f80d3", height: width / 12, width: width / 12, alignSelf: "center", elevation: 0 }}   ><Image style={{ width: "100%", height: "100%" }} source={require("../../assets/left-arrow.png")} resizeMode="contain" /></Button></View> */}
-                    <TouchableOpacity activeOpacity={1} style={{ width: "20%", backgroundColor: "#8d7ecc" }} onPress={() => { this.props.navigation.navigate("Main"), console.warn("navigation working") }} >
-                        <View style={{ flex: 1, height: 70, backgroundColor: "#9f80d3", alignItems: "flex-start", justifyContent: "center", }} ><Button style={{ backgroundColor: "#9f80d3", height: width / 12, width: width / 12, alignSelf: "center", elevation: 0 }} onPress={() => { this.props.navigation.navigate("Main"), console.warn("navigation working") }}  ><Image style={{ width: "100%", height: "100%" }} source={require("../../assets/left-arrow.png")} resizeMode="contain"  onPress={() => { this.props.navigation.navigate("Main"), console.warn("navigation working") }} /></Button></View>
-                    </TouchableOpacity>
-                    <View style={{ flex: 2, height: 70, backgroundColor: '#9f80d3', alignItems: "center", justifyContent: "center" }} ><View style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}><Text style={{ fontWeight: "bold", fontSize: fontScale * 18, color: "white" }}>Add Product</Text></View></View>
-                    <View style={{ flex: 1, height: 70, backgroundColor: '#9f80d3', alignItems: "center", justifyContent: "center", }} ><View style={{ width: width / 14, height: width / 14 }} ><Image style={{ height: "100%", width: "100%" }} /></View></View>
-                </View>
-
-                <View style={styles.Create_Business_Container} >
-                    {/* <View style={styles.Create_Business} >
-                        <TouchableOpacity style={styles.Create_Icons} >
-                            <Image resizeMode="center"
-                                source={require("../../assets/logo.png")} style={{ height: 25, width: 25 }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.Create_Text_View} >
-                            <Text style={styles.Create_Text} >
-                                Create a Business Page
-                        </Text>
-                        </TouchableOpacity>
-                    </View> */}
-
-                    <CardItem style={{
-                        elevation: 0,
-                        // borderBottomColor: "#fff",
-                        // borderBottomColor: "#f2f2f2",
-                        // borderBottomWidth: 2,
-                        borderTopWidth: 0.5,
-                        borderBottomColor: "#dfdfdf"
                     }}>
-                        <Left>
-                            <Thumbnail
-                                style={styles.Thumbnail}
-                                square source={{ uri: 'https://tse1.mm.bing.net/th?id=OIP.SqFFRAB4rmsWQgWw6iP-lAHaLH&pid=15.1&P=0&w=300&h=300' }} />
-                            <Body>
-                                <Text>Personal Service Shop</Text>
-                                <View style={styles.stars}>
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Text style={[styles.textStyle, { marginLeft: 3, marginTop: -3 }]} >
-                                        (4.0)
-                                             </Text>
-                                </View>
-                            </Body>
-                        </Left>
-                        <Right style={{ justifyContent: "flex-end" }} >
-                            <View style={styles.RightSection} >
+                        {/* <View style={{ flex: 1, height: 70, backgroundColor: "#9f80d3", alignItems: "flex-start", justifyContent: "center", }} ><Button onPress={() => { this.props.navigation.navigate("PaymentsWallet"), console.warn("navigation working") }} style={{ backgroundColor: "#9f80d3", height: width / 12, width: width / 12, alignSelf: "center", elevation: 0 }}   ><Image style={{ width: "100%", height: "100%" }} source={require("../../assets/left-arrow.png")} resizeMode="contain" /></Button></View> */}
+                        <TouchableOpacity activeOpacity={1} style={{ width: "20%", backgroundColor: "#8d7ecc" }} onPress={() => { this.props.navigation.navigate("Main"), console.warn("navigation working") }} >
+                            <View style={{ flex: 1, height: 70, backgroundColor: "#9f80d3", alignItems: "flex-start", justifyContent: "center", }} ><Button style={{ backgroundColor: "#9f80d3", height: width / 12, width: width / 12, alignSelf: "center", elevation: 0 }} onPress={() => { this.props.navigation.navigate("Main"), console.warn("navigation working") }}  ><Image style={{ width: "100%", height: "100%" }} source={require("../../assets/left-arrow.png")} resizeMode="contain" onPress={() => { this.props.navigation.navigate("Main"), console.warn("navigation working") }} /></Button></View>
+                        </TouchableOpacity>
+                        <View style={{ flex: 2, height: 70, backgroundColor: '#9f80d3', alignItems: "center", justifyContent: "center" }} ><View style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}><Text style={{ fontWeight: "bold", fontSize: fontScale * 18, color: "white" }}>Add Product</Text></View></View>
+                        <View style={{ flex: 1, height: 70, backgroundColor: '#9f80d3', alignItems: "center", justifyContent: "center", }} ><View style={{ width: width / 14, height: width / 14 }} ><Image style={{ height: "100%", width: "100%" }} /></View></View>
+                    </View>
 
-                                <View style={styles.sellOn_container} >
-                                    <Text style={styles.sellOnText} >
-                                        Sell On
-                                                 </Text>
-                                </View>
-                            </View>
-                        </Right>
-                    </CardItem>
+                    <TouchableOpacity activeOpacity={1} onPress={() => this.start()} style={{ marginTop: "3%", alignSelf: "center", width: width / 2, height: width / 2, borderRadius: 100 }}>
+                        <Image resizeMode="contain" style={{ width: width / 2, height: width / 2, borderRadius: 100 }} source={{ uri: this.state.avatarSource }} />
+                    </TouchableOpacity>
 
-                    <CardItem style={styles.CardItem}>
-                        <Left>
-                            <Thumbnail
-                                style={styles.Thumbnail}
-                                square source={{ uri: 'https://tse1.mm.bing.net/th?id=OIP.SqFFRAB4rmsWQgWw6iP-lAHaLH&pid=15.1&P=0&w=300&h=300' }} />
-                            <Body>
-                                <Text>Biryani</Text>
-                                <Text>3</Text>
-                                {/* <View style={styles.stars}>
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Icons name="star" size={15} color="#a581d5" />
-                                    <Text style={[styles.textStyle, { marginLeft: 3, marginTop: -3 }]} >
-                                        (4.0)
-                                             </Text>
-                                </View> */}
-                            </Body>
-                        </Left>
-                        <Right style={{ justifyContent: "flex-end" }} >
-                            <View style={styles.RightSection} >
-                                <View style={styles.byOn_container} >
-                                    <Text style={styles.buyOnText} >
-                                       $75
-                                                 </Text>
-                                </View>
-                                <View style={styles.sellOn_container} >
-                                    <Text style={styles.sellOnText} >
-                                        Amount
-                                                 </Text>
-                                </View>
-                            </View>
-                        </Right>
-                    </CardItem>
-                  
-                    <CardItem style={styles.CardItem}>
-                    <Left>
-                        <Thumbnail
-                            style={styles.Thumbnail}
-                            square source={{ uri: 'https://tse1.mm.bing.net/th?id=OIP.SqFFRAB4rmsWQgWw6iP-lAHaLH&pid=15.1&P=0&w=300&h=300' }} />
-                        <Body>
-                            <Text>Tiqa Boti</Text>
-                            <Text>3</Text>
-                            {/* <View style={styles.stars}>
-                                <Icons name="star" size={15} color="#a581d5" />
-                                <Icons name="star" size={15} color="#a581d5" />
-                                <Icons name="star" size={15} color="#a581d5" />
-                                <Icons name="star" size={15} color="#a581d5" />
-                                <Icons name="star" size={15} color="#a581d5" />
-                                <Text style={[styles.textStyle, { marginLeft: 3, marginTop: -3 }]} >
-                                    (4.0)
-                                         </Text>
-                            </View> */}
-                        </Body>
-                    </Left>
-                    <Right style={{ justifyContent: "flex-end" }} >
-                        <View style={styles.RightSection} >
-                            <View style={styles.byOn_container} >
-                                <Text style={styles.buyOnText} >
-                                   $60
-                                             </Text>
-                            </View>
-                            <View style={styles.sellOn_container} >
-                                <Text style={styles.sellOnText} >
-                                    Amount
-                                             </Text>
-                            </View>
+                    <View style={{ alignSelf: "center", borderRadius: 16, height: width / 6, width: width / 2 }}>
+                        <TextInput
+                            /* underlineColorAndroid="white" */
+                            style={{ fontWeight: "bold", fontWeight: "bold", height: width / 4, backgroundColor: "rgba(100,200,150,0.5)", width, color: "#ffffff", fontSize: fontScale * 25, paddingRight: "2%", paddingLeft: "2%" }}
+                            onChangeText={(productname) => this.setState({ productname })}
+                            value={this.state.productname}
+                            placeholder="Biryani"
+                            placeholderTextColor="#ffffff"
+                            autoCapitalize='none'
+                        />
+                    </View>
+                    <View style={{ flexDirection: "row", alignSelf: "center" }}>
+                        <View style={{ alignSelf: "center", borderRadius: 16, height: width / 6, width: width / 6, marginTop: "2%", marginRight: "2%" }}>
+                            <TextInput
+                                /* underlineColorAndroid="white" */
+                                style={{ fontWeight: "bold", fontWeight: "bold", height: width / 4, width, color: "#ffffff", backgroundColor: "rgba(100,200,150,0.5)", fontSize: fontScale * 25, paddingRight: "2%", paddingLeft: "2%" }}
+                                onChangeText={(price) => this.setState({ price })}
+                                value={this.state.price}
+                                placeholder="$70"
+                                placeholderTextColor="#ffffff"
+                                autoCapitalize='none'
+                            />
                         </View>
-                    </Right>
-                </CardItem>
+                        <View style={{ alignSelf: "center", borderRadius: 16, height: width / 6, width: width / 6, marginTop: "2%" }}>
+                            <TextInput
+                                /* underlineColorAndroid="white" */
+                                style={{ fontWeight: "bold", fontWeight: "bold", height: width / 4, width, color: "#ffffff", backgroundColor: "rgba(100,200,150,0.5)", fontSize: fontScale * 25, paddingRight: "2%", paddingLeft: "2%" }}
+                                onChangeText={(kg) => this.setState({ kg })}
+                                value={this.state.kg}
+                                placeholder="90kg"
+                                placeholderTextColor="#ffffff"
+                                autoCapitalize='none'
+                            />
+                        </View>
 
-                </View>
+                    </View>
+                    <View style={{ width: width / 1.1, height: width / 2, alignSelf: "center" }}>
+                        <Textarea style={{ backgroundColor: "rgba(100,200,150,0.5)", color: "#ffffff", fontSize: fontScale * 16 }} value={this.state.text} onChangeText={(text) => this.setState({ text })} rowSpan={5} bordered placeholder="Textarea" />
 
-                {/* <View style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
-                    <Footer style={{ position: "relative", bottom: 0, backgroundColor: "white", color: "black" }}>
-                        <FooterTab style={{ backgroundColor: "white", color: "black" }}>
-                            <Button style={{ padding: "5%", borderBottomWidth: 5, borderBottomColor: "#9f80d3" }} >
-                                <Image resizeMode="contain" style={{ padding: 15, margin: 0, width: width / 35, height: width / 35 }} source={require("../../assets/icon6.png")} />
-                            </Button>
-                            <Button style={{ padding: "5%" }}>
-                                <Image resizeMode="contain" style={{ padding: 15, margin: 0, width: width / 35, height: width / 35 }} source={require("../../assets/icon7.png")} />
-                            </Button>
-                            <Button style={{ padding: "5%" }}>
-                                <Image resizeMode="contain" style={{ padding: 15, margin: 0, width: width / 35, height: width / 35 }} source={require("../../assets/icon8.png")} />
-                            </Button>
-                            <Button style={{ padding: "5%" }}>
-                                <Image resizeMode="contain" style={{ padding: 15, margin: 0, width: width / 35, height: width / 35 }} source={require("../../assets/icon9.png")} />
-                            </Button>
-                            <Button style={{ padding: "5%" }}>
-                                <Image resizeMode="contain" style={{ padding: 15, margin: 0, width: width / 35, height: width / 35 }} source={require("../../assets/icon10.png")} />
-                            </Button>
-                        </FooterTab>
-                    </Footer>
-                </View> */}
-
+                    </View>
+                    <Button onPress={() => this.uploadonFirebase(this.state.avatarSource, this.state.productname, this.state.price, this.state.kg, this.state.text)} style={{ backgroundColor: "rgb(180,180,180)", height: width / 7, width: width / 4, borderRadius: 100, alignSelf: "center", paddingLeft: "5%" }}><Text style={{ color: "#ffffff", fontWeight: "bold" }}>Upload</Text></Button>
+                </ScrollView>
             </View>
         );
     }

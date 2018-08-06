@@ -44,7 +44,7 @@ class SideBar extends React.Component {
             accountType: "user",
             // check:firebase.database().ref(`user/${firebase.auth().currentUser.uid}/`).once("value"),
             //         firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).update({imagelink})
-            avatarSource:"content://media/external/images/media/2958"
+            avatarSource:"https://firebasestorage.googleapis.com/v0/b/sugarandspice-34c66.appspot.com/o/defaultuser.png?alt=media&token=666d2446-cc82-4023-870c-994a2a8fcc6d"
             // avatarSource:valu,
         }
         
@@ -98,7 +98,13 @@ class SideBar extends React.Component {
                 return imageRef.getDownloadURL()
             })
             .then((url) => {
-                console.log("then 4")                    
+                console.log("then 4")    
+                // this.uploadonFirebase(url)      
+                this.setState(
+                    {
+                        avatarSource:url
+                    }
+                )  
                 resolve(url)
             })
             .catch((error) => {
@@ -130,12 +136,12 @@ class SideBar extends React.Component {
                 // let source = { uri: 'data:image/jpeg;base64,' + response.data };
                 
                 this.setState({
-                    avatarSource: response.uri
+                    // avatarSource: response.uri
                 });
             }
             console.log(this.state.avatarSource)
-            this.uploadonFirebase(this.state.avatarSource)
             this.uploadImage(response.uri,firebase.auth().currentUser.uid);
+            this.uploadonFirebase(this.state.avatarSource)
         });
     }
     
