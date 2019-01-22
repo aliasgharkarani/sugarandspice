@@ -13,12 +13,6 @@ import { StackNavigator, DrawerNavigator, NavigationActions } from "react-naviga
 // import history from '../components/History'
 
 const NavigationApp = StackNavigator({
-  Signup: {
-    screen: Signup,
-    navigationOptions: {
-      header: null,
-    }
-  },
   Signin: {
     screen: Signin,
     navigationOptions: {
@@ -27,6 +21,12 @@ const NavigationApp = StackNavigator({
   },
   Main: {
     screen: Main,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  Signup: {
+    screen: Signup,
     navigationOptions: {
       header: null,
     }

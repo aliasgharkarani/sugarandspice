@@ -33,22 +33,23 @@ class Signin extends Component {
   };
 
 
-  // console.log();
   signup = () => {
     let user = {
       email: this.state.email,
       password: this.state.password
     }
+    // console.log(user);
     firebase.auth().signInWithEmailAndPassword(user.email, user.password)
     .then((studentcreatedUser) => {
       // delete user.password;
       // delete user.confirmPassword;
       // alert("aaaa")
-        // user.uid = studentcreatedUser.uid;
-        //Database Work
-        // firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).set(user)
-        // alert("nbhfbh")
-        // alert(this.state.password)
+      // user.uid = studentcreatedUser.uid;
+      //Database Work
+      // firebase.database().ref(`user/${firebase.auth().currentUser.uid}`).set(user)
+      // alert("nbhfbh")
+      // alert(this.state.password)
+      // alert("Working");
         this.props.navigation.navigate("Main")
       }).catch(
         (Error) => { alert(Error.message) }
